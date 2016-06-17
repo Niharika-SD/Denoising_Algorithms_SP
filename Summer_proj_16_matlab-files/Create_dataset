@@ -1,0 +1,35 @@
+img_norm = rgb2gray(imread('peppers.png'));
+[m,n,p] = size(img_norm);
+patch_side =21;
+ 
+a = rem(n, patch_side);
+p1 = patch_side - a; %number of extra columns which need to be added on the right
+    
+    
+b = rem(m, patch_side);
+p2 = patch_side - b; %number of extra rows which need to be added below the image
+    
+
+ img_padded_temp= zeros(m+2*p2,n+2*p1);
+   padded_img = zeros(m+2*p2,n+2*p1,p);
+
+[number_of_rows,number_of_columns,layers] = size(padded_img); %update rows and columns
+    vertical_patches = ceil((number_of_rows/patch_side-1)*patch_side);
+    horizontal_patches = ceil((number_of_columns/patch_side-1)*patch_side);
+    
+ for r = 1 : p %adds required padding to image
+        img_padded_temp = padarray(img_norm(:,:,r),[p2,p1],'replicate'); %padding on the right
+        padded_img(:,:,r) = img_padded_temp;
+ end   
+ padded_img = padded_img/255;
+
+ img_noisy = zeros(patch_side,patch_side);
+    for t = 1 :p %extracts a layer for creating patches 
+        for i = 1 : vertical_patches %creates sequential patches of size 29x29 of image
+            for j = 1 : horizontal_patches
+                img_noisy = padded_img(i:i+patch_side-1,j:j+patch_side-1,t);
+                str1 = strcat('train',num2str((j-1)+(i-1)*vertical_patches),'.jpg');
+                imwrite(img_noisy,str1,'png');
+            end
+        end
+    end

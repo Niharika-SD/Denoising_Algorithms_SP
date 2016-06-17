@@ -30,8 +30,8 @@ def dir_to_dataset(glob_files, loc_train_labels=""):
 
 
 train_set_x, train_set_y = dir_to_dataset("train_data/*.png")
-val_set_x, val_set_y = dir_to_dataset("val_data/*.png")
-test_set_x, test_set_y = dir_to_dataset("test_data/*.png")
+val_set_x, val_set_y = dir_to_dataset("train_data/*.png")
+test_set_x, test_set_y = dir_to_dataset("train_data/*.png")
 # Data and labels are read 
 
 #print(val_set_y)

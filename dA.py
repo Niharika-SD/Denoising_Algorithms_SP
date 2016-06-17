@@ -90,8 +90,8 @@ class dA(object):
         numpy_rng,
         theano_rng=None,
         input=None,
-        n_visible=784,
-        n_hidden=500,
+        n_visible=441,
+        n_hidden=600,
         W=None,
         bhid=None,
         bvis=None
@@ -267,7 +267,7 @@ class dA(object):
         #        minibatches, L will be a vector, with one entry per
         #        example in minibatch
         
-        //modified loss function
+        ## modified loss function
         L =  T.sum(pow((self.x -z),2), axis=1)
         
 
@@ -290,7 +290,7 @@ class dA(object):
 
         return (cost, updates)
 
-def test_dA(learning_rate=0.1, training_epochs=15,
+def test_dA(learning_rate=0.1, training_epochs=20,
             dataset='file.pkl.gz',
             batch_size=20, output_folder='dA_plots'):
 
@@ -335,8 +335,8 @@ def test_dA(learning_rate=0.1, training_epochs=15,
         numpy_rng=rng,
         theano_rng=theano_rng,
         input=x,
-        n_visible=28 * 28,
-        n_hidden=1000
+        n_visible=21 * 21,
+        n_hidden=600
     )
 
     cost, updates = da.get_cost_updates(
@@ -393,8 +393,8 @@ def test_dA(learning_rate=0.1, training_epochs=15,
         numpy_rng=rng,
         theano_rng=theano_rng,
         input=x,
-        n_visible=28 * 28,
-        n_hidden=1000
+        n_visible=21 * 21,
+        n_hidden=600
     )
 
     cost, updates = da.get_cost_updates(
@@ -438,7 +438,7 @@ def test_dA(learning_rate=0.1, training_epochs=15,
     # start-snippet-4
     image = Image.fromarray(tile_raster_images(
         X=da.W.get_value(borrow=True).T,
-        img_shape=(28, 28), tile_shape=(10, 10),
+        img_shape=(21, 21), tile_shape=(10, 10),
         tile_spacing=(1, 1)))
     image.save('filters_corruption_30.png')
     # end-snippet-4
