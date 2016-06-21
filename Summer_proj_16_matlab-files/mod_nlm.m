@@ -1,14 +1,11 @@
-close all;
-clear all;
+inp_img = imread('ILSVRC2012_test_00000001.JPEG');
 
-input = imread('cameraman.tif');
-
-figure;imshow(input);
-title('original image')
-
-h=fspecial('gaussian',[5 5],10);
-I=im2double(input);
-inp_img=imfilter(I,h,'conv');
+% figure;imshow(input);
+% title('original image')
+% 
+% h=fspecial('gaussian',[5 5],10);
+% I=im2double(input);
+% inp_img=imfilter(I,h,'conv');
 
 figure;imshow(inp_img);
 title('noisy image')

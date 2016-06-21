@@ -13,7 +13,7 @@ def dir_to_dataset(glob_files, loc_train_labels=""):
     for file_count, file_name in enumerate( sorted(glob(glob_files),key=len) ):
         image = Image.open(file_name)
         im = Image.open(file_name).convert('LA') #tograyscale
-        img = im.resize((28,28), Image.ANTIALIAS)
+        img = im.resize((21,21), Image.ANTIALIAS)
         pixels = [f[0] for f in list(img.getdata())]
         dataset.append(pixels)
         if file_count % 10 == 0:
@@ -29,9 +29,11 @@ def dir_to_dataset(glob_files, loc_train_labels=""):
         return np.array(dataset), np.array(dataset)
 
 
-train_set_x, train_set_y = dir_to_dataset("train_data/*.png")
-val_set_x, val_set_y = dir_to_dataset("train_data/*.png")
-test_set_x, test_set_y = dir_to_dataset("train_data/*.png")
+train_set_x, train_set_y = dir_to_dataset("train_data/*.jpg")
+val_set_x,val_set_y = train_set_x,train_set_y;
+test_set_x,test_set_y =train_set_x,train_set_y;
+#val_set_x, val_set_y = dir_to_dataset("val_data/*.png")
+#test_set_x, test_set_y = dir_to_dataset("test_data/*.png")
 # Data and labels are read 
 
 #print(val_set_y)

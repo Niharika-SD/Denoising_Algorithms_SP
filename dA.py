@@ -61,6 +61,11 @@ except ImportError:
 theano_random = RNG_MRG.MRG_RandomStreams(seed=23455)
 log = logging.getLogger(__name__)
 
+patch_side = 21
+hidden = 500
+L1_penalty =0.001
+L2_penalty =0.00001
+
 class dA(object):
     """Denoising Auto-Encoder class (dA)
 
@@ -90,8 +95,8 @@ class dA(object):
         numpy_rng,
         theano_rng=None,
         input=None,
-        n_visible=441,
-        n_hidden=600,
+        n_visible=patch_side^2,
+        n_hidden=hidden,
         W=None,
         bhid=None,
         bvis=None
@@ -202,7 +207,11 @@ class dA(object):
             self.x = input
 
         self.params = [self.W, self.b, self.b_prime]
+       
+        #self.L1 = T.sum(abs(self.W))
 
+        # self.L2 = T.sum(self.W ** 2)
+      
     def get_corrupted_input(self, input, corruption_level):
         """This function keeps ``1-corruption_level`` entries of the inputs the
         same and zero-out randomly selected subset of size ``coruption_level``
@@ -267,17 +276,18 @@ class dA(object):
         #        minibatches, L will be a vector, with one entry per
         #        example in minibatch
         
+     
         ## modified loss function
-        L =  T.sum(pow((self.x -z),2), axis=1)
-        
+        L =  T.sum(pow((self.x -z),2), axis=1)         
 
-        #L = - T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis=1)
+        #L = -T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis=1)
         # note : L is now a vector, where each element is the
         #        cross-entropy cost of the reconstruction of the
         #        corresponding example of the minibatch. We need to
         #        compute the average of all these to get the cost of
         #        the minibatch
-        cost = T.mean(L)
+        cost = T.mean(L)+ L1_penalty*(T.sum(abs(self.W))+ T.sum(abs(self.b))) + L2_penalty*(T.sum(self.W ** 2) + T.sum(self.b ** 2))
+
 
         # compute the gradients of the cost of the `dA` with respect
         # to its parameters
@@ -292,7 +302,7 @@ class dA(object):
 
 def test_dA(learning_rate=0.1, training_epochs=20,
             dataset='file.pkl.gz',
-            batch_size=20, output_folder='dA_plots'):
+            batch_size=10, output_folder='dA_plots'):
 
     """
     This demo is tested on MNIST
@@ -335,8 +345,8 @@ def test_dA(learning_rate=0.1, training_epochs=20,
         numpy_rng=rng,
         theano_rng=theano_rng,
         input=x,
-        n_visible=21 * 21,
-        n_hidden=600
+        n_visible=patch_side * patch_side,
+        n_hidden=hidden
     )
 
     cost, updates = da.get_cost_updates(
@@ -377,7 +387,7 @@ def test_dA(learning_rate=0.1, training_epochs=20,
            ' ran for %.2fm' % ((training_time) / 60.)), file=sys.stderr)
     image = Image.fromarray(
         tile_raster_images(X=da.W.get_value(borrow=True).T,
-                           img_shape=(28, 28), tile_shape=(10, 10),
+                           img_shape=(patch_side, patch_side), tile_shape=(10, 10),
                            tile_spacing=(1, 1)))
     image.save('filters_corruption_0.png')
 
@@ -393,8 +403,8 @@ def test_dA(learning_rate=0.1, training_epochs=20,
         numpy_rng=rng,
         theano_rng=theano_rng,
         input=x,
-        n_visible=21 * 21,
-        n_hidden=600
+        n_visible=patch_side * patch_side,
+        n_hidden = hidden
     )
 
     cost, updates = da.get_cost_updates(
@@ -438,7 +448,7 @@ def test_dA(learning_rate=0.1, training_epochs=20,
     # start-snippet-4
     image = Image.fromarray(tile_raster_images(
         X=da.W.get_value(borrow=True).T,
-        img_shape=(21, 21), tile_shape=(10, 10),
+        img_shape=(patch_side, patch_side), tile_shape=(10, 10),
         tile_spacing=(1, 1)))
     image.save('filters_corruption_30.png')
     # end-snippet-4
