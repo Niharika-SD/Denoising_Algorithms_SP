@@ -5,10 +5,11 @@ import sys
 import os
 from skimage import data, img_as_float
 from skimage.util.shape import view_as_windows
-dirname = 'train_data'
+
+dirname = 'train_data_NL_1'
 os.mkdir(dirname)
 
-image = cv2.imread('image1.jpg',0)
+image = cv2.imread('out1.jpg',0)
 [m,n] = image.shape
 
 print 'number of rows is:'

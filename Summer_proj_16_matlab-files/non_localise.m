@@ -1,4 +1,4 @@
-function output = non_localise(inp_img) 
+function [output,img_padded] = non_localise(inp_img) 
 %%non localises information in the input image on the basis of patchwise
 %%similarity
 

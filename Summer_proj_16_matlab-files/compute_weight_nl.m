@@ -2,7 +2,7 @@
  
  %computes weight of the patch w.r.t the reference
  
- h=0.01;
+ h=1;
  dist_int = sqrt(sum((patch_ref-patch).^2));
  if (rem(i,horz_patch) == 0)
      p1 = horz_patch;
