@@ -8,11 +8,11 @@ patchsize = 21; %AE input patchsize
 swind_hsize = 21;% half size of search window
 s =(patchsize-1)/2 ; 
 sim_wind = 3;   % measure of side of patch for similarity 
-numpatches = 10000;
+numpatches = 10;
 
 % Initialize patches with zeros.  Your code will fill in this matrix--one
 % column per patch, 10000 columns. 
-patches = zeros(patchsize*patchsize, numpatches);
+patches = zeros(patchsize*patchsize, numpatches,2);
 
 %% ---------- YOUR CODE HERE --------------------------------------
 %  Instructions: Fill in the variable called "patches" using data 
@@ -26,6 +26,7 @@ patches = zeros(patchsize*patchsize, numpatches);
 %  more details.) As a second example, IMAGES(21:30,21:30,1) is an image
 %  patch corresponding to the pixels in the block (21,21) to (30,30) of
 %  Image 1
+
 for  i=1:numpatches
         d = randi(10,1);
     
@@ -40,7 +41,6 @@ for  i=1:numpatches
     img = im2double(img);
 
     img_padded = padarray(img,[swind_hsize,swind_hsize],'replicate');
-    imshow(img_padded);
 
     %center of patch
     r = swind_hsize+randi([s+1,m-s],1);
@@ -50,9 +50,18 @@ for  i=1:numpatches
     temp_patch = img_padded(r-s:r+s,c-s:c+s);
     temp_patch_copy = temp_patch;
     patch_mod = modify_patch(temp_patch,search_window,sim_wind);
-    patch_mod1 = patch_mod;
-    patch_mod1(s:s+2,s:s+2) = temp_patch_copy(s:s+2,s:s+2);    
-    patches(:,i) =reshape(patch_mod1,[patchsize^2 1]);
+    
+    patch_mod(s:s+2,s:s+2) = temp_patch_copy(s:s+2,s:s+2);    
+    patches(:,i,1) =reshape(patch_mod,[patchsize^2 1]);
+    n = 1;
+    switch n
+        case 0
+    patches(:,i,2) =reshape(patch_mod,[patchsize^2 1]);
+        case 1
+    patches(:,i,2) =reshape(repmat(temp_patch_copy(s:s+2,s:s+2),[patchsize/sim_wind,patchsize/sim_wind]),[patchsize^2 1]);        
+        otherwise
+            disp('not a valid option')
+    end
 end
 
 
@@ -61,7 +70,8 @@ end
 % Specifically, since the output of the network is bounded between [0,1]
 % (due to the sigmoid activation function), we have to make sure 
 % the range of pixel values is also bounded between [0,1]
-patches = normalizeData(patches);
+patches(:,:,1) = normalizeData(patches(:,:,1));
+patches(:,:,2) = normalizeData(patches(:,:,2));
 
 end
 
