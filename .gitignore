@@ -3,3 +3,4 @@
 /train_data/*.jpg
 .jpg
 .tar.gz
+*.m~
