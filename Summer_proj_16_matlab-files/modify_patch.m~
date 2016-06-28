@@ -52,14 +52,13 @@ switch v
      end
     case 1
       patch_dictionary_mod = create_weighted_patch_2(patch_dictionary(((numel-1)/2)+1,:),search_dictionary,sim_wind);
-end
-
+end    
 %patch_dictionary = patch_dictionary(:);
 % % for i = 1:size(patch_dictionary,1)
 % %  pd_1(i,:,:) = reshape(patch_dictionary(i,:),[3,3]);
 % % end
 % % out = reshape(pd_1,[m,n]);
 
-out = patch_reconst(patch_dictionary_mod,size(patch,1),size(patch,2),sim_wind);
 
+%out = reshape(patch_dictionary,[m,n]);
 end

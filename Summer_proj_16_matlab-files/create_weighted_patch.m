@@ -1,7 +1,7 @@
 function patch_out = create_weighted_patch(patch_d,s_dict,a,hp,hp2)
 %% takes a patch vector as input along with the search window dictionary and position of current element in the iteration and returns the weighted and reconstructed patch
 
-h=0.1; %filter parameter
+h=1; %filter parameter
 numel = size(s_dict,1);
 
 if (rem(a,hp) == 0)
